@@ -153,16 +153,33 @@ class ShiftPlanning(object):
         then we make a login request otherwise this method make requests depending on how it's called.
         Uploading a file is different in that data of the file is sent in 'filedata' along side
         'data' POST variable. """
+	#print params
+	
+	#Reset last response data
+        self.response_data = None
         data = ''
+	reqData = params
         if self.token and not filedata:
-            data = urllib.urlencode([('data', simplejson.dumps({'token':self.token,'request':params}))])
+	    if reqData.has_key('request'):
+	      reqData['token'] = self.token
+	      data = urllib.urlencode([('data', simplejson.dumps(reqData))])
+	    else:
+	      data = urllib.urlencode([('data', simplejson.dumps({'token':self.token,'request':params}))])
         if filedata:#it's a file upload
-            data = simplejson.dumps({'token':self.token,'request':params})
+	    if reqData.has_key('request'):
+	      reqData['token'] = self.token
+	      data = simplejson.dumps(reqData)
+	    else:
+	      data = simplejson.dumps({'token':self.token,'request':params})
             data = urllib.urlencode([('data', data),('filedata',filedata)])
             
         if not self.token and not filedata:#this is a login request
-            data = urllib.urlencode([('data', simplejson.dumps({'key':self.key,'request':params}))])
-        
+	    if not params.has_key('request'):
+	      data = urllib.urlencode([('data', simplejson.dumps({'key':self.key,'request':params}))])
+	    else:
+	      reqData['key'] = self.key
+	      data = urllib.urlencode([('data', simplejson.dumps(reqData))])
+	    
         req = urllib2.Request(self.api_endpoint,headers={'accept-charset':'UTF-8'})
         try:
             reader = urllib2.urlopen(req, data)
@@ -173,11 +190,12 @@ class ShiftPlanning(object):
         response = reader.read()
         #print response
         if response == "":
-            #self.response_data = {''
+            self.response_data = 'No JSON object received from server.'
             return (None, "No JSON object received from server.")
         response = simplejson.loads(response)
         
         if response.has_key('error'):
+	    self.response_data = response['data'] + " => Error " + response['error']
             return {'error':response['error']}
         else:
             self.response_data = response['data']
@@ -187,6 +205,7 @@ class ShiftPlanning(object):
         if params['module'] == 'staff.login':
             if response.has_key('token'):
                 self.token = response['token']
+        
         
         
     def get_content_type(self,file_path):
