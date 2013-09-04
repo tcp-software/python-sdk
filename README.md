@@ -8,6 +8,34 @@ above on your website. Except as otherwise noted, the ShiftPlanning Python SDK
 is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
+Install
+-------
+
+`shift_planning` requires the `simplejson` module. This might be pre-installed
+on your system.  If not, install it from your package manager or using
+easyinstall or pip. One of these should work for you:
+
+Ubuntu / Debian:
+
+    apt-get install python-simplejson
+
+Red Hat / Fedora / CentOS:
+
+    yum install python-simplejson
+
+All distros and Windows / OS X:
+
+    pip install simplejson
+
+Alternately, you can download it from https://pypi.python.org/pypi/simplejson/
+and install it manually with its `setup.py`.
+
+
+Once simplejson is available done, install the `shift_planning` module:
+
+    sudo python setup.py install
+
+.. or just copy the `shift_planning` folder to your project directory.
 
 Usage
 -----
@@ -39,4 +67,3 @@ Feedback
 
 We are relying on the [GitHub issues tracker][issues] linked from above for
 feedback. File bugs or other issues [here][issues].
-
