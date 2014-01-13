@@ -62,7 +62,9 @@ response_codes = {
     '90' :'Suspended API key - Access for your account has been suspended, please contact ShiftPlanning',
     '91' :'Throttle exceeded - You have exceeded the max allowed requests. Try again later.',
     '98' :'Bad API Paramaters - Invalid POST request. See Manual.',
-    '99' :'Service Offline - This service is temporarily offline. Try again later.'
+    '99' :'Service Offline - This service is temporarily offline. Try again later.',
+    '100':'Can not connect to LDAP - host or port are incorrect',
+    '101':'Can not connect to LDAP - user or password are incorrect'
 }
 
 internal_errors = {
