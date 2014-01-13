@@ -36,7 +36,7 @@ via shift_planning_obj.get_raw_response().
 import codecs
 import mimetypes
 import os
-import simplejson
+import json
 import types
 import urllib
 import urllib2
@@ -155,13 +155,13 @@ class ShiftPlanning(object):
         'data' POST variable. """
         data = ''
         if self.token and not filedata:
-            data = urllib.urlencode([('data', simplejson.dumps({'token':self.token,'request':params}))])
+            data = urllib.urlencode([('data', json.dumps({'token':self.token,'request':params}))])
         if filedata:#it's a file upload
-            data = simplejson.dumps({'token':self.token,'request':params})
+            data = json.dumps({'token':self.token,'request':params})
             data = urllib.urlencode([('data', data),('filedata',filedata)])
             
         if not self.token and not filedata:#this is a login request
-            data = urllib.urlencode([('data', simplejson.dumps({'key':self.key,'request':params}))])
+            data = urllib.urlencode([('data', json.dumps({'key':self.key,'request':params}))])
         
         req = urllib2.Request(self.api_endpoint,headers={'accept-charset':'UTF-8'})
         try:
@@ -175,7 +175,7 @@ class ShiftPlanning(object):
         if response == "":
             #self.response_data = {''
             return (None, "No JSON object received from server.")
-        response = simplejson.loads(response)
+        response = json.loads(response)
         
         if response.has_key('error'):
             return {'error':response['error']}
