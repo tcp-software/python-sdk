@@ -146,7 +146,7 @@ class ShiftPlanning(object):
             'method':'GET'
         }
         self.perform_request(params)
-        if self.response['status']['code'] == 1:
+        if self.response['status'] != 1:
             self.token = None
             self.response_data = None
         
