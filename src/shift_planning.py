@@ -104,8 +104,10 @@ class ShiftPlanning(object):
         """Returns a callback if callback is a valid function"""
         if type(callback) == types.FunctionType:
             self.callback = callback
+            return self.callback
+        else:
+            return (None, "Callback isn't a valid function")
             
-        return (None, "Callback isn't a valid function")
     def get_public_data(self):
         if self.response_data == '':
             return "Data was empty in the response object (no data was sent from server)."
