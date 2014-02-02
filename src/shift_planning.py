@@ -135,6 +135,7 @@ class ShiftPlanning(object):
             "password":self.password
         }
         self.perform_request(params)
+
     def do_logout(self):
         params = {
             'module':'staff.logout',
@@ -160,11 +161,11 @@ class ShiftPlanning(object):
         data = ''
         if self.token and not filedata:
             data = urllib.urlencode([('data', json.dumps({'token':self.token,'request':params}))])
-        if filedata:#it's a file upload
+        if filedata: #it's a file upload
             data = json.dumps({'token':self.token,'request':params})
             data = urllib.urlencode([('data', data),('filedata',filedata)])
             
-        if not self.token and not filedata:#this is a login request
+        if not self.token and not filedata: #this is a login request
             data = urllib.urlencode([('data', json.dumps({'key':self.key,'request':params}))])
         
         req = urllib2.Request(self.api_endpoint,headers={'accept-charset':'UTF-8'})
@@ -175,9 +176,8 @@ class ShiftPlanning(object):
         if reader.code != 200:
             raise Exception(internal_errors[2])
         response = reader.read()
-        #print response
+
         if response == "":
-            #self.response_data = {''
             return (None, "No JSON object received from server.")
         response = json.loads(response)
         
@@ -193,8 +193,7 @@ class ShiftPlanning(object):
                 self.token = response['token']
 
         return self.response
-        
-        
+           
     def get_content_type(self,file_path):
         return mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
         
@@ -205,7 +204,6 @@ class ShiftPlanning(object):
         data= open(file_path,'r').read()
         return data
     
-     
     def create_admin_file(self,file_path):
         """Expects a file path. Parameter 'file_path' can be calculated like
         file_path = os.path.normpath('c:\test.pdf'). Note that in params we're only setting
@@ -220,9 +218,8 @@ class ShiftPlanning(object):
             'mimetype': self.get_content_type(file_path),
             
         }
-        
-        
         self.perform_request(params,self.get_file_data(filename))
+
     def get_api_methods(self):
         params = {
             'module':'api.methods',
@@ -230,7 +227,6 @@ class ShiftPlanning(object):
         }
         self.perform_request(params)
         
-    
     def create_admin_backup(self,backup_details):
         if not backup_details: return None
         filename = backup_details
@@ -257,8 +253,7 @@ class ShiftPlanning(object):
             'method':'GET'
         }
         self.perform_request(params)
-        
-    
+         
     def delete_admin_backup(self,id):
         params = {
             'module':'admin.backup',
@@ -275,6 +270,7 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         self.perform_request(params)
+
     def get_admin_file_details(self,id):
         params = {
             'module':'admin.file',
@@ -289,8 +285,7 @@ class ShiftPlanning(object):
             'method':'GET'
         }
         self.perform_request(params)
-        
-    
+         
     def update_admin_file(self,id, details):
         if not details: return None
         params = {
@@ -301,7 +296,6 @@ class ShiftPlanning(object):
         params.update(details)
         self.perform_request(params)
         
-    
     def update_admin_settings(self,settings):
         if not settings:  return None
         params = {
@@ -311,8 +305,7 @@ class ShiftPlanning(object):
         
         params.update(settings)
         self.perform_request(params)
-        
-        
+         
     def get_admin_serttings(self):
         params = {
             'module':'admin.settings',
@@ -320,7 +313,6 @@ class ShiftPlanning(object):
         }
         self.perform_request(params)
         
-    
     def get_scheduler_conflicts(self,time_period):
         if time_period: return None
         params = {
@@ -331,7 +323,6 @@ class ShiftPlanning(object):
         params.update(time_period)
         self.perform_request(params)
         
-    
     def delete_vacation_schedule(self,id):
         params = {
             'module':'schedule.vacation',
@@ -339,6 +330,7 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         self.perform_request(params)
+
     def update_vacation_schedule(self,id,vacation_details):
         if not vacation_details: return None
         params = {
@@ -398,6 +390,7 @@ class ShiftPlanning(object):
         
         params.update(shift_details)
         self.perform_request(params)
+
     def update_shift(self,id,shift_details):
         if not shift_details: return None
         params = {
@@ -417,7 +410,6 @@ class ShiftPlanning(object):
         }
         self.perform_request(params)
         
-    
     def get_shifts(self):
         params = {
             'module':'schedule.shifts',
@@ -444,6 +436,7 @@ class ShiftPlanning(object):
 
         params.update(params)
         self.perform_request(params)
+
     def create_schedule(self,schedule_details):
         """Creates a schedule. Parameter 'schedule_details' expects a dictionary which
         might look something like {'name':'Very important architecture overview!'}"""
@@ -455,6 +448,7 @@ class ShiftPlanning(object):
         
         params.update(schedule_details)
         self.perform_request(params)
+
     def get_schedule_details(self,id):
         params = {
             'module':'schedule.schedule',
@@ -535,6 +529,7 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         self.perform_request(params)
+
     def create_employee(self,details):
         """Creates an employee. Parameter 'details' is a dictionary and it might
         look like {'name':'Ryan'}"""
@@ -546,6 +541,7 @@ class ShiftPlanning(object):
        
         params.update(details)
         self.perform_request(params)
+
     def update_employee(self,id,data):
         if not data: return None
         params = {
@@ -556,6 +552,7 @@ class ShiftPlanning(object):
         
         params.update(data)
         self.perform_request(params)
+
     def get_employee_details(self,id):
         params = {
             'module':'staff.employee',
@@ -593,6 +590,7 @@ class ShiftPlanning(object):
         }
         params.update(message)
         self.perform_request(params)
+
     def get_wall_messages(self):
         params= {
             'module':'messaging.wall',
@@ -607,6 +605,7 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         self.perform_request(params)
+
     def create_message(self,message):
         """Creates a messages. Parameter 'message' might look something like
         {'message':'this is a beautiful day.','subject':'weather','to':'here-goes-id'}"""
@@ -633,5 +632,3 @@ class ShiftPlanning(object):
         }
         self.perform_request(params)
         
-        
-  
