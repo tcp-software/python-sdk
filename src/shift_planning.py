@@ -107,7 +107,7 @@ class ShiftPlanning(object):
             return self.callback
         else:
             return (None, "Callback isn't a valid function")
-            
+
     def get_public_data(self):
         if self.response_data == '':
             return "Data was empty in the response object (no data was sent from server)."
@@ -191,6 +191,8 @@ class ShiftPlanning(object):
         if params['module'] == 'staff.login':
             if response.has_key('token'):
                 self.token = response['token']
+
+        return self.response
         
         
     def get_content_type(self,file_path):
