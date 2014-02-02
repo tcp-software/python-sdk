@@ -21,14 +21,16 @@ have is:
         pwd = 'password'
         s = shift_planning.ShiftPlanning(key,username,pwd)
 
-To make [API] calls:
-        Following is an example
-	shift_planning_obj.create_message({'message':'this is a beautiful day.','subject':'weather','to':'14320'})
+to make [API] calls. 
+
+Some API calls have dedicated methods, such as:
+
+    shift_planning_obj.create_message({'message':'this is a beautiful day.','subject':'weather','to':'14320'})
         
 To Login
 
         shift_planning_obj.do_login()
-        
+
 and logout
 
         shift_planning_obj.do_logout()
@@ -53,12 +55,15 @@ response = shift_planning_obj.perform_request(params)
 ```
 
 
+You can read the full documentation [here](http://www.shiftplanning.com/api/).
+
+
 [API]: http://www.shiftplanning.com/api/
 
 
 Feedback
 --------
 
-We are relying on the [GitHub issues tracker][issues] linked from above for
-feedback. File bugs or other issues [here][issues].
+We are relying on the [GitHub issues tracker](/../../issues) linked from above for
+feedback. File bugs or other issues [here](/../../issues).
 
