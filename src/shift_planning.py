@@ -134,14 +134,14 @@ class ShiftPlanning(object):
             "username":self.username,
             "password":self.password
         }
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def do_logout(self):
         params = {
             'module':'staff.logout',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_api_config(self):
         params = {
@@ -152,6 +152,8 @@ class ShiftPlanning(object):
         if self.response['status'] != 1:
             self.token = None
             self.response_data = None
+        else:
+            return self.response
         
     def perform_request(self,params,filedata=None):
         """This method performs a HTTP request. If token isn't set and 'filedata' parameter isn't set
@@ -225,7 +227,7 @@ class ShiftPlanning(object):
             'module':'api.methods',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def create_admin_backup(self,backup_details):
         if not backup_details: return None
@@ -245,14 +247,14 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_admin_backups(self):
         params = {
             'module':'admin.backups',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
          
     def delete_admin_backup(self,id):
         params = {
@@ -261,7 +263,7 @@ class ShiftPlanning(object):
             'id':str(id)
             
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def delete_admin_file(self,id):
         params = {
@@ -269,7 +271,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def get_admin_file_details(self,id):
         params = {
@@ -277,14 +279,14 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def get_admin_files(self):
         params = {
             'module':'admin.files',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
          
     def update_admin_file(self,id, details):
         if not details: return None
@@ -294,7 +296,7 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         params.update(details)
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def update_admin_settings(self,settings):
         if not settings:  return None
@@ -304,14 +306,14 @@ class ShiftPlanning(object):
         }
         
         params.update(settings)
-        self.perform_request(params)
+        return self.perform_request(params)
          
     def get_admin_serttings(self):
         params = {
             'module':'admin.settings',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_scheduler_conflicts(self,time_period):
         if time_period: return None
@@ -321,7 +323,7 @@ class ShiftPlanning(object):
         }
         
         params.update(time_period)
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def delete_vacation_schedule(self,id):
         params = {
@@ -329,7 +331,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def update_vacation_schedule(self,id,vacation_details):
         if not vacation_details: return None
@@ -340,7 +342,7 @@ class ShiftPlanning(object):
         }
        
         params.update(vacation_details)
-        self.perform_request(params)
+        return self.perform_request(params)
             
     def create_vacation_schedule(self,vacation_details):
         """Creates a vacation schedule and the parameter 'vacation_details' might
@@ -352,7 +354,7 @@ class ShiftPlanning(object):
         }
         
         params.update(vacation_details)
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_vacation_schedule_details(self,id):
         params = {
@@ -360,7 +362,7 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_vacation_schedules(self,time_period=None):
         params = {
@@ -368,7 +370,7 @@ class ShiftPlanning(object):
             'method':'GET'
         }
         if time_period: params.update(time_period)
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def delete_shift(self,id):
         params = {
@@ -376,7 +378,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def create_shift(self,shift_details):
         """Creates a shift and parameter 'shift_details' might look like
@@ -389,7 +391,7 @@ class ShiftPlanning(object):
         }
         
         params.update(shift_details)
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def update_shift(self,id,shift_details):
         if not shift_details: return None
@@ -400,7 +402,7 @@ class ShiftPlanning(object):
         }
         
         params.update(shift_details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def get_shift_details(self,id):
         params = {
@@ -408,14 +410,14 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_shifts(self):
         params = {
             'module':'schedule.shifts',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     
     def delete_schedule(self,id):
@@ -424,7 +426,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def update_schedule(self,id,schedule_details):
         if not schedule_details: return None
@@ -435,7 +437,7 @@ class ShiftPlanning(object):
         }
 
         params.update(params)
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def create_schedule(self,schedule_details):
         """Creates a schedule. Parameter 'schedule_details' expects a dictionary which
@@ -447,7 +449,7 @@ class ShiftPlanning(object):
         }
         
         params.update(schedule_details)
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def get_schedule_details(self,id):
         params = {
@@ -455,7 +457,7 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     
     def get_schedules(self):
@@ -463,7 +465,7 @@ class ShiftPlanning(object):
             'module':'schedule.schedules',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     
     def create_staff_ping(self,ping_data):
@@ -483,7 +485,7 @@ class ShiftPlanning(object):
             'id':str(id)
             
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def update_staff_skill(self,id,skill_details):
         if not skill_details: return None
@@ -493,7 +495,7 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         params.update(skill_details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def create_staff_skill(self,skill_details):
         """Creates staff skill. Parameter 'skill_details' is a dict and it might
@@ -505,7 +507,7 @@ class ShiftPlanning(object):
         }
         
         params.update(skill_details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def get_staff_skill_details(self,id):
         params = {
@@ -513,14 +515,14 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_staff_skills(self):
         params = {
             'module':'staff.skill',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def delete_employee(self,id):
         params = {
@@ -528,7 +530,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def create_employee(self,details):
         """Creates an employee. Parameter 'details' is a dictionary and it might
@@ -540,7 +542,7 @@ class ShiftPlanning(object):
         }
        
         params.update(details)
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def update_employee(self,id,data):
         if not data: return None
@@ -551,7 +553,7 @@ class ShiftPlanning(object):
         }
         
         params.update(data)
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def get_employee_details(self,id):
         params = {
@@ -559,14 +561,14 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_employees(self):
         params = {
             'module':'staff.employees',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
         
     def delete_wall_message(self,id,details):
@@ -578,7 +580,7 @@ class ShiftPlanning(object):
         }
         
         params.update(details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def create_wall_message(self,message):
         """Creates a wall message. Paramter 'message' might look
@@ -589,14 +591,14 @@ class ShiftPlanning(object):
             'method':'CREATE'
         }
         params.update(message)
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def get_wall_messages(self):
         params= {
             'module':'messaging.wall',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def delete_message(self,id):
         params= {
@@ -604,7 +606,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
 
     def create_message(self,message):
         """Creates a messages. Parameter 'message' might look something like
@@ -615,7 +617,7 @@ class ShiftPlanning(object):
             'method': 'CREATE'
         }
         params.update(message)
-        self.perform_request(params)
+        return self.perform_request(params)
             
     def get_message_details(self,id):
         params= {
@@ -623,12 +625,12 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_messages(self):
         params= {
             'module':'messaging.messages',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         

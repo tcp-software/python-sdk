@@ -27,9 +27,31 @@ To make [API] calls:
         
 To Login
 
-	shift_planning_obj.do_login()
+        shift_planning_obj.do_login()
+        
 and logout
+
         shift_planning_obj.do_logout()
+
+Making Requests
+--------------
+
+Using the `perform_request()` method, you can make API calls by passing in parameters.
+
+Example:
+
+```python
+params = {
+    'module' : 'availability.weekly',
+    'method' : 'GET',
+    'request' : {
+        'user' : 123456
+    }
+}
+
+response = shift_planning_obj.perform_request(params)
+```
+
 
 [API]: http://www.shiftplanning.com/api/
 
