@@ -185,6 +185,8 @@ class ShiftPlanning(object):
         
         if response.has_key('error'):
             return {'error':response['error']}
+        elif str(response['status']) != '1':
+            raise Exception(response_codes[str(response['status'])])
         else:
             self.response_data = response['data']
             self.response = response
