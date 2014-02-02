@@ -55,7 +55,7 @@ response = shift_planning_obj.perform_request(params)
 ```
 
 
-More
+You can read the full documentation [here](http://www.shiftplanning.com/api/).
 
 
 [API]: http://www.shiftplanning.com/api/
@@ -64,6 +64,6 @@ More
 Feedback
 --------
 
-We are relying on the [GitHub issues tracker][issues] linked from above for
-feedback. File bugs or other issues [here][issues].
+We are relying on the [GitHub issues tracker](/../../issues) linked from above for
+feedback. File bugs or other issues [here](/../../issues).
 
