@@ -36,7 +36,7 @@ via shift_planning_obj.get_raw_response().
 import codecs
 import mimetypes
 import os
-import simplejson
+import json
 import types
 import urllib
 import urllib2
@@ -62,7 +62,9 @@ response_codes = {
     '90' :'Suspended API key - Access for your account has been suspended, please contact ShiftPlanning',
     '91' :'Throttle exceeded - You have exceeded the max allowed requests. Try again later.',
     '98' :'Bad API Paramaters - Invalid POST request. See Manual.',
-    '99' :'Service Offline - This service is temporarily offline. Try again later.'
+    '99' :'Service Offline - This service is temporarily offline. Try again later.',
+    '100':'Can not connect to LDAP - host or port are incorrect',
+    '101':'Can not connect to LDAP - user or password are incorrect'
 }
 
 internal_errors = {
@@ -102,8 +104,10 @@ class ShiftPlanning(object):
         """Returns a callback if callback is a valid function"""
         if type(callback) == types.FunctionType:
             self.callback = callback
-            
-        return (None, "Callback isn't a valid function")
+            return self.callback
+        else:
+            return (None, "Callback isn't a valid function")
+
     def get_public_data(self):
         if self.response_data == '':
             return "Data was empty in the response object (no data was sent from server)."
@@ -130,13 +134,14 @@ class ShiftPlanning(object):
             "username":self.username,
             "password":self.password
         }
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def do_logout(self):
         params = {
             'module':'staff.logout',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_api_config(self):
         params = {
@@ -144,24 +149,28 @@ class ShiftPlanning(object):
             'method':'GET'
         }
         self.perform_request(params)
-        if self.response['status']['code'] == 1:
+        if self.response['status'] != 1:
             self.token = None
             self.response_data = None
+        else:
+            return self.response
         
     def perform_request(self,params,filedata=None):
         """This method performs a HTTP request. If token isn't set and 'filedata' parameter isn't set
         then we make a login request otherwise this method make requests depending on how it's called.
         Uploading a file is different in that data of the file is sent in 'filedata' along side
         'data' POST variable. """
+        self.response = None
+        self.response_data = None
         data = ''
         if self.token and not filedata:
-            data = urllib.urlencode([('data', simplejson.dumps({'token':self.token,'request':params}))])
-        if filedata:#it's a file upload
-            data = simplejson.dumps({'token':self.token,'request':params})
+            data = urllib.urlencode([('data', json.dumps({'token':self.token,'request':params}))])
+        if filedata: #it's a file upload
+            data = json.dumps({'token':self.token,'request':params})
             data = urllib.urlencode([('data', data),('filedata',filedata)])
             
-        if not self.token and not filedata:#this is a login request
-            data = urllib.urlencode([('data', simplejson.dumps({'key':self.key,'request':params}))])
+        if not self.token and not filedata: #this is a login request
+            data = urllib.urlencode([('data', json.dumps({'key':self.key,'request':params}))])
         
         req = urllib2.Request(self.api_endpoint,headers={'accept-charset':'UTF-8'})
         try:
@@ -171,24 +180,25 @@ class ShiftPlanning(object):
         if reader.code != 200:
             raise Exception(internal_errors[2])
         response = reader.read()
-        #print response
+
         if response == "":
-            #self.response_data = {''
             return (None, "No JSON object received from server.")
-        response = simplejson.loads(response)
+        response = json.loads(response)
         
         if response.has_key('error'):
             return {'error':response['error']}
+        elif str(response['status']) != '1':
+            raise Exception(response_codes[str(response['status'])])
         else:
             self.response_data = response['data']
             self.response = response
             if self.callback:
                 self.callback()
-        if params['module'] == 'staff.login':
-            if response.has_key('token'):
-                self.token = response['token']
-        
-        
+        if params['module'] == 'staff.login' and response.has_key('token'):
+            self.token = response['token']
+
+        return self.response
+           
     def get_content_type(self,file_path):
         return mimetypes.guess_type(file_path)[0] or 'application/octet-stream'
         
@@ -199,7 +209,6 @@ class ShiftPlanning(object):
         data= open(file_path,'r').read()
         return data
     
-     
     def create_admin_file(self,file_path):
         """Expects a file path. Parameter 'file_path' can be calculated like
         file_path = os.path.normpath('c:\test.pdf'). Note that in params we're only setting
@@ -214,17 +223,15 @@ class ShiftPlanning(object):
             'mimetype': self.get_content_type(file_path),
             
         }
-        
-        
-        self.perform_request(params,self.get_file_data(filename))
+       return  self.perform_request(params,self.get_file_data(filename))
+
     def get_api_methods(self):
         params = {
             'module':'api.methods',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
-    
     def create_admin_backup(self,backup_details):
         if not backup_details: return None
         filename = backup_details
@@ -235,7 +242,7 @@ class ShiftPlanning(object):
             
         }
         params.update(backup_details)
-        self.perform_request(params,self.get_file_data(filename))
+        return self.perform_request(params,self.get_file_data(filename))
     
     def get_admin_backup_details(self,id):
         params = {
@@ -243,16 +250,15 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_admin_backups(self):
         params = {
             'module':'admin.backups',
             'method':'GET'
         }
-        self.perform_request(params)
-        
-    
+        return self.perform_request(params)
+         
     def delete_admin_backup(self,id):
         params = {
             'module':'admin.backup',
@@ -260,7 +266,7 @@ class ShiftPlanning(object):
             'id':str(id)
             
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def delete_admin_file(self,id):
         params = {
@@ -268,23 +274,23 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def get_admin_file_details(self,id):
         params = {
             'module':'admin.file',
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def get_admin_files(self):
         params = {
             'module':'admin.files',
             'method':'GET'
         }
-        self.perform_request(params)
-        
-    
+        return self.perform_request(params)
+         
     def update_admin_file(self,id, details):
         if not details: return None
         params = {
@@ -293,9 +299,8 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         params.update(details)
-        self.perform_request(params)
+        return self.perform_request(params)
         
-    
     def update_admin_settings(self,settings):
         if not settings:  return None
         params = {
@@ -304,17 +309,15 @@ class ShiftPlanning(object):
         }
         
         params.update(settings)
-        self.perform_request(params)
-        
-        
+        return self.perform_request(params)
+         
     def get_admin_serttings(self):
         params = {
             'module':'admin.settings',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
-    
     def get_scheduler_conflicts(self,time_period):
         if time_period: return None
         params = {
@@ -323,16 +326,16 @@ class ShiftPlanning(object):
         }
         
         params.update(time_period)
-        self.perform_request(params)
+        return self.perform_request(params)
         
-    
     def delete_vacation_schedule(self,id):
         params = {
             'module':'schedule.vacation',
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def update_vacation_schedule(self,id,vacation_details):
         if not vacation_details: return None
         params = {
@@ -342,7 +345,7 @@ class ShiftPlanning(object):
         }
        
         params.update(vacation_details)
-        self.perform_request(params)
+        return self.perform_request(params)
             
     def create_vacation_schedule(self,vacation_details):
         """Creates a vacation schedule and the parameter 'vacation_details' might
@@ -354,7 +357,7 @@ class ShiftPlanning(object):
         }
         
         params.update(vacation_details)
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_vacation_schedule_details(self,id):
         params = {
@@ -362,7 +365,7 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_vacation_schedules(self,time_period=None):
         params = {
@@ -370,7 +373,7 @@ class ShiftPlanning(object):
             'method':'GET'
         }
         if time_period: params.update(time_period)
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def delete_shift(self,id):
         params = {
@@ -378,7 +381,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def create_shift(self,shift_details):
         """Creates a shift and parameter 'shift_details' might look like
@@ -391,7 +394,8 @@ class ShiftPlanning(object):
         }
         
         params.update(shift_details)
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def update_shift(self,id,shift_details):
         if not shift_details: return None
         params = {
@@ -401,7 +405,7 @@ class ShiftPlanning(object):
         }
         
         params.update(shift_details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def get_shift_details(self,id):
         params = {
@@ -409,15 +413,14 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
-    
     def get_shifts(self):
         params = {
             'module':'schedule.shifts',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     
     def delete_schedule(self,id):
@@ -426,7 +429,7 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def update_schedule(self,id,schedule_details):
         if not schedule_details: return None
@@ -437,7 +440,8 @@ class ShiftPlanning(object):
         }
 
         params.update(params)
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def create_schedule(self,schedule_details):
         """Creates a schedule. Parameter 'schedule_details' expects a dictionary which
         might look something like {'name':'Very important architecture overview!'}"""
@@ -448,14 +452,15 @@ class ShiftPlanning(object):
         }
         
         params.update(schedule_details)
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def get_schedule_details(self,id):
         params = {
             'module':'schedule.schedule',
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     
     def get_schedules(self):
@@ -463,7 +468,7 @@ class ShiftPlanning(object):
             'module':'schedule.schedules',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     
     def create_staff_ping(self,ping_data):
@@ -483,7 +488,7 @@ class ShiftPlanning(object):
             'id':str(id)
             
         }
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def update_staff_skill(self,id,skill_details):
         if not skill_details: return None
@@ -493,7 +498,7 @@ class ShiftPlanning(object):
             'id':str(id)
         }
         params.update(skill_details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def create_staff_skill(self,skill_details):
         """Creates staff skill. Parameter 'skill_details' is a dict and it might
@@ -505,7 +510,7 @@ class ShiftPlanning(object):
         }
         
         params.update(skill_details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def get_staff_skill_details(self,id):
         params = {
@@ -513,14 +518,14 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_staff_skills(self):
         params = {
             'module':'staff.skill',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def delete_employee(self,id):
         params = {
@@ -528,7 +533,8 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def create_employee(self,details):
         """Creates an employee. Parameter 'details' is a dictionary and it might
         look like {'name':'Ryan'}"""
@@ -539,7 +545,8 @@ class ShiftPlanning(object):
         }
        
         params.update(details)
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def update_employee(self,id,data):
         if not data: return None
         params = {
@@ -549,21 +556,22 @@ class ShiftPlanning(object):
         }
         
         params.update(data)
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def get_employee_details(self,id):
         params = {
             'module':'staff.employee',
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_employees(self):
         params = {
             'module':'staff.employees',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
         
     def delete_wall_message(self,id,details):
@@ -575,7 +583,7 @@ class ShiftPlanning(object):
         }
         
         params.update(details)
-        self.perform_request(params)
+        return self.perform_request(params)
     
     def create_wall_message(self,message):
         """Creates a wall message. Paramter 'message' might look
@@ -586,13 +594,14 @@ class ShiftPlanning(object):
             'method':'CREATE'
         }
         params.update(message)
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def get_wall_messages(self):
         params= {
             'module':'messaging.wall',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def delete_message(self,id):
         params= {
@@ -600,7 +609,8 @@ class ShiftPlanning(object):
             'method':'DELETE',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
+
     def create_message(self,message):
         """Creates a messages. Parameter 'message' might look something like
         {'message':'this is a beautiful day.','subject':'weather','to':'here-goes-id'}"""
@@ -610,7 +620,7 @@ class ShiftPlanning(object):
             'method': 'CREATE'
         }
         params.update(message)
-        self.perform_request(params)
+        return self.perform_request(params)
             
     def get_message_details(self,id):
         params= {
@@ -618,14 +628,12 @@ class ShiftPlanning(object):
             'method':'GET',
             'id':str(id)
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
     def get_messages(self):
         params= {
             'module':'messaging.messages',
             'method':'GET'
         }
-        self.perform_request(params)
+        return self.perform_request(params)
         
-        
-  
