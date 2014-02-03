@@ -160,6 +160,8 @@ class ShiftPlanning(object):
         then we make a login request otherwise this method make requests depending on how it's called.
         Uploading a file is different in that data of the file is sent in 'filedata' along side
         'data' POST variable. """
+        self.response = None
+        self.response_data = None
         data = ''
         if self.token and not filedata:
             data = urllib.urlencode([('data', json.dumps({'token':self.token,'request':params}))])
@@ -192,9 +194,8 @@ class ShiftPlanning(object):
             self.response = response
             if self.callback:
                 self.callback()
-        if params['module'] == 'staff.login':
-            if response.has_key('token'):
-                self.token = response['token']
+        if params['module'] == 'staff.login' and response.has_key('token'):
+            self.token = response['token']
 
         return self.response
            
@@ -222,7 +223,7 @@ class ShiftPlanning(object):
             'mimetype': self.get_content_type(file_path),
             
         }
-        self.perform_request(params,self.get_file_data(filename))
+       return  self.perform_request(params,self.get_file_data(filename))
 
     def get_api_methods(self):
         params = {
@@ -241,7 +242,7 @@ class ShiftPlanning(object):
             
         }
         params.update(backup_details)
-        self.perform_request(params,self.get_file_data(filename))
+        return self.perform_request(params,self.get_file_data(filename))
     
     def get_admin_backup_details(self,id):
         params = {
