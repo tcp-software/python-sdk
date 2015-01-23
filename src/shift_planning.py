@@ -80,7 +80,7 @@ internal_errors = {
 class ShiftPlanning(object):
     def __init__(self,key,username,password):
         self.session_identifier = "SP"
-        self.api_endpoint = "http://www.shiftplanning.com/api/"
+        self.api_endpoint = "https://www.shiftplanning.com/api/"
         self.output_type = "json"
         self.request = None
         self.token = None
