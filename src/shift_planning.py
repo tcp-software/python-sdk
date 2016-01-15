@@ -316,7 +316,7 @@ class ShiftPlanning(object):
         
     
     def get_scheduler_conflicts(self,time_period):
-        if time_period: return None
+        if not time_period: return None
         params = {
             'module':'schedule.conflicts',
             'method' :'GET'
