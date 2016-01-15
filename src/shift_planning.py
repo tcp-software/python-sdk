@@ -625,6 +625,22 @@ class ShiftPlanning(object):
             'method':'GET'
         }
         self.perform_request(params)
+
+    def get_timesheets(self, timesheet_details):
+        if not timesheet_details: return None
+        params= {
+            'module':'reports.timesheets',
+            'method':'GET'
+        }
+        params.update(timesheet_details)
+        self.perform_request(params)
+
+    def get_locations(self):
+        params= {
+            'module':'location.locations',
+            'method':'GET'
+        }
+        self.perform_request(params)
         
         
   
