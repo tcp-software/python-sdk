@@ -315,14 +315,13 @@ class ShiftPlanning(object):
         self.perform_request(params)
         
     
-    def get_scheduler_conflicts(self,time_period):
-        if not time_period: return None
+    def get_scheduler_conflicts(self,time_period=None):
         params = {
             'module':'schedule.conflicts',
             'method' :'GET'
         }
         
-        params.update(time_period)
+        if time_period: params.update(time_period)
         self.perform_request(params)
         
     
