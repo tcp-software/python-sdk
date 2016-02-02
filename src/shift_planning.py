@@ -557,11 +557,12 @@ class ShiftPlanning(object):
         }
         self.perform_request(params)
         
-    def get_employees(self):
+    def get_employees(self, details=''):
         params = {
             'module':'staff.employees',
             'method':'GET'
         }
+        params.update(details)
         self.perform_request(params)
         
         
