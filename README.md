@@ -1,7 +1,7 @@
 ShiftPlanning Python SDK
 ================
 
-The [ShiftPlanning API](http://www.shiftplanning.com/api/) allows you to call modules within the ShiftPlanning [employee scheduling software](http://www.shiftplanning.com/) that respond in REST style JSON & XML.
+The [ShiftPlanning API](http://www.humanity.com/api/) allows you to call modules within the ShiftPlanning [employee scheduling software](http://www.humanity.com/) that respond in REST style JSON & XML.
 
 This repository contains the open source Python SDK that allows you to utilize the
 above on your website. Except as otherwise noted, the ShiftPlanning Python SDK
@@ -31,7 +31,7 @@ To Login
 and logout
         shift_planning_obj.do_logout()
 
-[API]: http://www.shiftplanning.com/api/
+[API]: http://www.humanity.com/api/
 
 
 Feedback

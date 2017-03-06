@@ -60,7 +60,7 @@
 <a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring"> * ShiftPlanning Python SDK</tt> </tt>
 <a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring"> * Version: 1.0</tt> </tt>
 <a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring"> * Date: 11/01/2010</tt> </tt>
-<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-docstring"> * http://www.shiftplanning.com/api/</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-docstring"> * http://www.humanity.com/api/</tt> </tt>
 <a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-docstring"> </tt> </tt>
 <a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-docstring">All methods are called using perform_request() method. Supplying correct 'key'</tt> </tt>
 <a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-docstring">while initiating a ShiftPlanning object is important otherwise things won't work</tt> </tt>
@@ -71,7 +71,7 @@
 <a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-docstring">  "data": {</tt> </tt>
 <a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-docstring">    "employee": {</tt> </tt>
 <a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-docstring">      "name": "Ryan Fyfe",</tt> </tt>
-<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-docstring">      "email": "ryan@shiftplanning.com",</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-docstring">      "email": "ryan@humanity.com",</tt> </tt>
 <a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-docstring">      "etc": "..."</tt> </tt>
 <a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-docstring">    },</tt> </tt>
 <a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-docstring">    "business": {</tt> </tt>
@@ -137,7 +137,7 @@
 <a name="ShiftPlanning"></a><div id="ShiftPlanning-def"><a name="L80"></a><tt class="py-lineno"> 80</tt> <a class="py-toggle" href="#" id="ShiftPlanning-toggle" onclick="return toggle('ShiftPlanning');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="shift_planning.ShiftPlanning-class.html">ShiftPlanning</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
 </div><div id="ShiftPlanning-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="ShiftPlanning-expanded"><a name="ShiftPlanning.__init__"></a><div id="ShiftPlanning.__init__-def"><a name="L81"></a><tt class="py-lineno"> 81</tt> <a class="py-toggle" href="#" id="ShiftPlanning.__init__-toggle" onclick="return toggle('ShiftPlanning.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="shift_planning.ShiftPlanning-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">key</tt><tt class="py-op">,</tt><tt class="py-param">username</tt><tt class="py-op">,</tt><tt class="py-param">password</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
 </div><div id="ShiftPlanning.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="ShiftPlanning.__init__-expanded"><a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">session_identifier</tt> <tt class="py-op">=</tt> <tt class="py-string">"SP"</tt> </tt>
-<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">api_endpoint</tt> <tt class="py-op">=</tt> <tt class="py-string">"http://www.shiftplanning.com/api/"</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">api_endpoint</tt> <tt class="py-op">=</tt> <tt class="py-string">"http://www.humanity.com/api/"</tt> </tt>
 <a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">output_type</tt> <tt class="py-op">=</tt> <tt class="py-string">"json"</tt> </tt>
 <a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">request</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
 <a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">token</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>

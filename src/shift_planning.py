@@ -3,7 +3,7 @@
  * ShiftPlanning Python SDK
  * Version: 1.0
  * Date: 11/01/2010
- * http://www.shiftplanning.com/api/
+ * http://www.humanity.com/api/
  
 All methods are called using perform_request() method. Supplying correct 'key'
 while initiating a ShiftPlanning object is important otherwise things won't work
@@ -14,7 +14,7 @@ API are like following
   "data": {
     "employee": {
       "name": "Ryan Fyfe",
-      "email": "ryan@shiftplanning.com",
+      "email": "ryan@humanity.com",
       "etc": "..."
     },
     "business": {
@@ -80,7 +80,7 @@ internal_errors = {
 class ShiftPlanning(object):
     def __init__(self,key,username,password):
         self.session_identifier = "SP"
-        self.api_endpoint = "https://www.shiftplanning.com/api/"
+        self.api_endpoint = "https://www.humanity.com/api/"
         self.output_type = "json"
         self.request = None
         self.token = None
