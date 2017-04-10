@@ -112,7 +112,7 @@ class ShiftPlanning(object):
         
         return (None,"User hasn't been authenticated")
     
-    def get_raw_resopsne(self):
+    def get_raw_response(self):
         if self.response:
             return self.response
         return (None,"No raw response available")
