@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
- * ShiftPlanning Python SDK
+ * ShiftPlanning Python SDK (for Python 3)
  * Version: 1.0
  * Date: 11/01/2010
  * http://www.humanity.com/api/
@@ -38,8 +38,8 @@ import mimetypes
 import os
 import simplejson
 import types
-import urllib
-import urllib2
+import urllib.request
+import urllib.parse
 
 response_codes = {
     '-3':'Flagged API Key - Pemanently Banned',
@@ -112,7 +112,7 @@ class ShiftPlanning(object):
         
         return (None,"User hasn't been authenticated")
     
-    def get_raw_resopsne(self):
+    def get_raw_response(self):
         if self.response:
             return self.response
         return (None,"No raw response available")
@@ -154,18 +154,20 @@ class ShiftPlanning(object):
         Uploading a file is different in that data of the file is sent in 'filedata' along side
         'data' POST variable. """
         data = ''
+        binary_data = ''
         if self.token and not filedata:
-            data = urllib.urlencode([('data', simplejson.dumps({'token':self.token,'request':params}))])
+            data = urllib.parse.urlencode([('data', simplejson.dumps({'token':self.token,'request':params}))])
+            
         if filedata:#it's a file upload
             data = simplejson.dumps({'token':self.token,'request':params})
-            data = urllib.urlencode([('data', data),('filedata',filedata)])
+            data = urllib.parse.urlencode([('data', data),('filedata',filedata)])
             
         if not self.token and not filedata:#this is a login request
-            data = urllib.urlencode([('data', simplejson.dumps({'key':self.key,'request':params}))])
-        
-        req = urllib2.Request(self.api_endpoint,headers={'accept-charset':'UTF-8'})
+            data = urllib.parse.urlencode([('data', simplejson.dumps({'key':self.key,'request':params}))])
+        binary_data = data.encode('utf-8')
+        req = urllib.request.Request(self.api_endpoint,headers={'accept-charset':'UTF-8'})
         try:
-            reader = urllib2.urlopen(req, data)
+            reader = urllib.request.urlopen(req, binary_data)
         except:
             raise Exception("Cannot open the URL, please make sure API endpoint is correct.")
         if reader.code != 200:
@@ -177,7 +179,7 @@ class ShiftPlanning(object):
             return (None, "No JSON object received from server.")
         response = simplejson.loads(response)
         
-        if response.has_key('error'):
+        if 'error' in response:
             return {'error':response['error']}
         else:
             self.response_data = response['data']
@@ -185,7 +187,7 @@ class ShiftPlanning(object):
             if self.callback:
                 self.callback()
         if params['module'] == 'staff.login':
-            if response.has_key('token'):
+            if 'token' in response:
                 self.token = response['token']
         
         
