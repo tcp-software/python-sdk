@@ -14,7 +14,7 @@ API are like following
   "data": {
     "employee": {
       "name": "Ryan Fyfe",
-      "email": "ryan@shiftplanning.com",
+      "email": "ryan@humanity.com",
       "etc": "..."
     },
     "business": {
@@ -111,7 +111,7 @@ class ShiftPlanning(object):
         return (None, "Callback isn't a valid function")
 
     def get_public_data(self):
-        if self.response_data == '':
+        if not self.response_data:
             return "Data was empty in the response object (no data was sent from server)."
         if self.token and self.response_data:
             return self.response_data
