@@ -1,4 +1,8 @@
-ShiftPlanning Python SDK
+This Repository Have Shiftplanning Python 3 SDK
+===============================================
+
+
+ShiftPlanning Python 3 SDK
 ================
 
 The [ShiftPlanning API](http://www.humanity.com/api/) allows you to call modules within the ShiftPlanning [employee scheduling software](http://www.humanity.com/) that respond in REST style JSON & XML.
